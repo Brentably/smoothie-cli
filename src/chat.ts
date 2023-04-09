@@ -19,7 +19,7 @@ function runCommand(command: string) {
   });
 }
 
-export default async function chat(currentPath: any) {
+export default async function chat() {
     while (true) {
       const userMessage = await getUserInput(">>> ")
       const prompt = 
