@@ -19,8 +19,6 @@ program
   .command('chat')
   .action(chat)
 
-// openai call says unauthorized 401
-
 
 program
   .command('write')

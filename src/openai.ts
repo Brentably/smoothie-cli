@@ -21,18 +21,16 @@ function getOpenAI() {
 }
 
 // calls openai, stores the message history in store.json
-export async function getChatCompletion(message: string, model = "gpt-3.5-turbo") {
+export async function getChatCompletion(userMessage: string, messagesHistory: ChatCompletionRequestMessage[], model = "gpt-3.5-turbo") {
   const openai = getOpenAI()
-  const messages:ChatCompletionRequestMessage[] = readStore().messagesHistory
-  messages.push({role: "user", content: message})
+  
+  const messages = [...messagesHistory, {role: ChatCompletionRequestMessageRoleEnum.User, content: userMessage}];
   const completion = await openai.createChatCompletion({
     model: model,
     messages: messages,
   });
 
   if(!completion.data.choices[0].message) throw new Error("something fucked up")
-  messages.push(completion.data.choices[0].message)
-  writeStore((ps) => ({...ps, messagesHistory: messages}));
 
   return completion.data.choices[0].message.content
 }
