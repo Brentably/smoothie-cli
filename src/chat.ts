@@ -21,7 +21,7 @@ function runCommand(command: string) {
 
 export default async function chat(currentPath: any) {
     while (true) {
-      const userMessage = await getUserInput()
+      const userMessage = await getUserInput(">>> ")
       const prompt = 
       `You are a bot whose job it is to write programs.` 
       + ` You have the ability to create files and/or write to them.`
@@ -74,14 +74,14 @@ export default async function chat(currentPath: any) {
 }
 
 
-export async function getUserInput():Promise<string> {
+export async function getUserInput(prefix: string):Promise<string> {
   const rl = readline.createInterface({
     input: process.stdin,
     output: process.stdout,
   });
 
   const answer:string = await new Promise((resolve) => {
-    rl.question('>>> ', (input) => {
+    rl.question(prefix, (input) => {
       resolve(input);
       rl.close();
     });

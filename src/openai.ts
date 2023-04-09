@@ -31,7 +31,9 @@ export async function getChatCompletion(userMessage: string, messagesHistory: Ch
   });
 
   if(!completion.data.choices[0].message) throw new Error("something fucked up")
-
+  const {prompt_tokens, completion_tokens} = completion.data.usage!
+  const expense = calculateExpense(prompt_tokens, completion_tokens, model)
+  console.log(expense)
   return completion.data.choices[0].message.content
 }
 

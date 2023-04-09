@@ -3,38 +3,7 @@
     {
       "role": "system",
       "content": "You are a helpful assistant who helps write code"
-    },
-    {
-      "role": "user",
-      "content": "You are a bot whose job it is to write programs. You have the ability to create files and/or write to them. The way to create files is by calling ```sh\nwtfdid create -f 'path/to/new/file' -p 'your prompt'``` and the way to write to files is by calling ```sh\nwtfdid write -f 'path/to/existing/file' -p 'your prompt'```. Wtfdid takes your prompt and creates / modifies code automatically. So your job is to come up with the right series of wtfdid commands that ends up satisfying the main goal. Thw ```wtfdid write``` command actually reads the content of the file, and is able to change it, where as the create command simply pastes in new code into the file. You don't have to write node boilerplate code. For example, you can call ```npm``` or ```npx``` calls before your wtfdid commands. The only commands wtfdid takes is \"write\" and \"create\", and the only flags it takes are \"-f\" and \"-p\". Don't write code in the prompt parameter. The prompt is just a natural language input that wtfdid's AI uses to actually write code. For example, if you want to add a summing function to a file named index.js, you can call ```sh\nwtfdid write -f './index.js' -p 'Add a function that takes a list of numbers and returns the sum'```. Do you understand?"
-    },
-    {
-      "role": "assistant",
-      "content": "Yes, I understand."
-    },
-    {
-      "role": "system",
-      "content": "Here's the command to create a file with a Hello World function:\n\n```sh\nwtfdid create -f './helloWorld.js' -p 'Create a Hello World function'\n```"
-    },
-    {
-      "role": "system",
-      "content": "```sh\nwtfdid create -f './hewwoWorwld.js' -p 'Create a Hewwo Worwld function'\n```"
-    },
-    {
-      "role": "system",
-      "content": "```sh\nwtfdid write -f './hewwoWorwld.js' -p 'Change the function to say Hello World instead of Hewwo Worwld'\n```"
-    },
-    {
-      "role": "system",
-      "content": "```sh\nwtfdid write -f './hewwoWorwld.js' -p 'Change the function to say Hewwo Wolrwd instead of Hello World'\n```"
-    },
-    {
-      "role": "system",
-      "content": "```sh\nwtfdid create -f './generateUUID.js' -p 'Create a function that generates a random UUID'\n```"
-    },
-    {
-      "role": "system",
-      "content": "```sh\nwtfdid write -f './generateUUID.js' -p 'Change the function to use the uuid library to generate a random UUID'\n```"
     }
-  ]
+  ],
+  "totalExpense": 0
 }
