@@ -23,6 +23,15 @@ program
   })
 
 program
+  .command('patcher')
+  .argument('[clear]')
+  .action((args) => {
+    if(args === "clear") clearChat()
+    else chat()
+  })
+
+
+program
   .command('write')
   .requiredOption('-f, --file-path <filepath>', 'file path')
   .requiredOption('-p, --prompt <prompt>', 'prompt')
