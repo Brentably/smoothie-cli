@@ -23,6 +23,14 @@ program
     else chat()
   })
 
+program
+  .command('ph')
+  .argument('[clear]')
+  .action((args) => {
+    if(args === "clear") clearChat()
+    else chat()
+  })
+
 
 program
   .command('write')

@@ -8,7 +8,7 @@
     "build": "tsc && npm link"
   },
   "bin": {
-    "wtfdid": "./build/index.js"
+    "wtfdid": "./build/src/index.js"
   },
   "author": "",
   "license": "ISC",

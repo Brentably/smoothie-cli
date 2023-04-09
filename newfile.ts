@@ -1,1 +1,1 @@
-throw new Error("new error message");
+throw new Error("ligma");
