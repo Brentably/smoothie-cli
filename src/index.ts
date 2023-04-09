@@ -7,7 +7,6 @@ import {clearChat, print} from './state';
 import chat, { getUserInput } from './chat';
 const program = new Command()
 
-
 program.version('0.0.1').description('My CLI tool')
 
 // Checks for OpenAI key and prompts user if it's not in the .env
@@ -20,9 +19,8 @@ program
   .argument('[clear]')
   .action((args) => {
     if(args === "clear") clearChat()
-    else chat()
+    else chat(false)
   })
-
 
 program
   .command('write')
