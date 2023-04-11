@@ -20,6 +20,7 @@ export default async function writeFileWithPrompt(filePath: String, prompt: Stri
   if (isCreate) {
     fileContent = readFile(filePath);
   }
+  console.log(fileContent)
   const res = await getChatCompletionStandalone(
 `
 Your job is to ${isCreate ? 'create a file using' : 'take a file and'} a prompt, and spit out what the file should look like given the prompt. Just respond with what the whole file's new content should look like, in one blob denotated by backticks. Make sure you write runnable code.
@@ -29,7 +30,7 @@ file name: "${filePath}"
 ${isCreate ? 'current file content: "' + fileContent + '"' : ''}
 
 prompt: "${prompt}"
-`, 'gpt-4');
+`);
   
   print(`Openai res: ${res}`);
 

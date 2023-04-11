@@ -43,7 +43,7 @@ export default async function chat(isPatcher: Boolean = false) {
         messages.push({role: "user", content: prompt}, {role: "assistant", content: "Yes, I understand."});
       }
 
-      const chatgptResponse = await getChatCompletion(userMessage, messages, 'gpt-4')
+      const chatgptResponse = await getChatCompletion(userMessage, messages, 'gpt-3.5-turbo')
       console.log(chatgptResponse)
 
       messages.push({role: ChatCompletionRequestMessageRoleEnum.System, content: chatgptResponse})

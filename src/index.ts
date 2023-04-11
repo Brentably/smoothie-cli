@@ -5,9 +5,10 @@ import writeFileWithPrompt from './writeToFileWithPrompt'
 import inquirer from 'inquirer'
 import {clearChat, print} from './state';
 import chat, { getUserInput } from './chat';
+import writeAndTest from './writeAndTest';
 const program = new Command()
 
-program.version('0.0.1').description('My CLI tool')
+program.version('0.0.2').description('super useful cli tool for chatgpt')
 
 // Checks for OpenAI key and prompts user if it's not in the .env
 program.action(async () => {
@@ -28,6 +29,12 @@ program
   .action((args) => {
     if(args === "clear") clearChat()
     else chat()
+  })
+
+program
+  .command('fix')
+  .action(async (args) => {
+    await writeAndTest(args[0], args.split(1).join(''))
   })
 
 
