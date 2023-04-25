@@ -2,7 +2,7 @@
 import { Command } from 'commander'
 import writeFileWithPrompt from './writeFromPrompt'
 import inquirer from 'inquirer'
-import { clearChat } from './state';
+import { clearChat, updateEnvFile } from './state';
 import chat from './chat';
 import ask from './ask';
 import fs from 'fs';
@@ -39,6 +39,11 @@ program
   .description('chat with chatGPT!')
   .action(() => experimentalChat())
 
+
+program
+  .command('setFocusedFilePath <filePath>')
+  .description('for vscode ext')
+  .action((filepath) => updateEnvFile('FOCUSED_FILEPATH', filepath))
 
 program
   .command('clear')

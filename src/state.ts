@@ -31,6 +31,11 @@ export function readApiKey(): string | undefined {
   return match ? match[1] : undefined;
 }
 
+// export function writeApiKey(apiKey: string): void {
+//   const dataToWrite = `OPENAI_KEY=${apiKey}`;
+//   fs.writeFileSync(configFilePath, dataToWrite);
+// }
+
 
 export function readEnv(variable: string): string | undefined {
   if (!fs.existsSync(configFilePath)) {
@@ -42,10 +47,36 @@ export function readEnv(variable: string): string | undefined {
   return match ? match[1] : undefined;
 }
 
-export function writeApiKey(apiKey: string): void {
-  const dataToWrite = `OPENAI_KEY=${apiKey}`;
-  fs.writeFileSync(configFilePath, dataToWrite);
+export function updateEnvFile(variable: string, value: string): void {
+  let rawData: string;
+
+  // Read the existing contents of the .env file
+  if (fs.existsSync(configFilePath)) {
+    rawData = fs.readFileSync(configFilePath, "utf8");
+  } else {
+    rawData = "";
+  }
+
+  // Check if the variable already exists in the file
+  const regex = new RegExp(`^${variable}=(.*)`, "m");
+  const match = regex.exec(rawData);
+
+  // If the variable exists, update its value
+  if (match) {
+    rawData = rawData.replace(regex, `${variable}=${value}`);
+  } else {
+    // If the variable doesn't exist, append it to the file
+    rawData += `\n${variable}=${value}`;
+  }
+
+  // Write the updated contents back to the .env file
+  fs.writeFileSync(configFilePath, rawData);
 }
+
+export function writeApiKey(apiKey: string): void {
+  updateEnvFile("OPENAI_KEY", apiKey);
+}
+
 
 export function isDev(): boolean {
   if (!fs.existsSync(configFilePath)) {
