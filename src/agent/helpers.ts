@@ -18,9 +18,9 @@ Input = `
 
 
 export const makeSystemString = (systemStringTemplate: string, possibleChoices: string[]) => {
-  console.log(possibleChoices)
+  // console.log(possibleChoices)
   const formattedToolsString = possibleChoices.join('\n')
-  console.log(formattedToolsString)
+  // console.log(formattedToolsString)
   const systemString = systemStringTemplate.replace('{{possibleChoices}}', formattedToolsString)
   return systemString
 }
