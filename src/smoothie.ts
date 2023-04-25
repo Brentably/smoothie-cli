@@ -32,6 +32,7 @@ program.version(version).description(description);
 
 program
   .description('chat with chatGPT!')
+  .option("-4, --four", 'gpt-4')
   .action((options) => smoothieChat(options.four ? "gpt-4" : undefined))
 
 program.parseAsync(process.argv)
