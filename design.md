@@ -26,7 +26,7 @@ Observation:
 
 langchain loc: 2015
 babyagi: 2831
-simple-agent: 489
+simple-agent: 633, 
 
 
 User flow:
