@@ -31,12 +31,20 @@ export async function getSmoothieCompletion(message: string, model = "gpt-3.5-tu
   ${fileContents}
   \`\`\`
   `
+
+  const fileName = filepath.split('/')[filepath.split('/').length-1]
+  console.log(`answering questions for ${fileName}`)
   
   writeStore(ps => {
-    const prevHistory = Boolean(ps.dialogues[filepath].messagesHistory.length);
+    const prevHistory = Boolean(ps.dialogues[filepath]?.messagesHistory.length);
     if(!prevHistory) {
+      // ps.dialogues[filepath] = {
+      //   messagesHistory: [{role: "system", content: systemString}],
+      //   historyTokens: calcTokens(systemString).toString()
+      // }
       ps.dialogues[filepath].messagesHistory = [{role: "system", content: systemString}]
       ps.dialogues[filepath].historyTokens = calcTokens(systemString).toString()
+      return ps
     } else if(prevHistory) {
       const removedTokens = calcTokens(ps.dialogues[filepath].messagesHistory[0].content)
       const addedTokens = calcTokens(systemString)
@@ -44,13 +52,17 @@ export async function getSmoothieCompletion(message: string, model = "gpt-3.5-tu
 
       ps.dialogues[filepath].messagesHistory[0] = {role: "system", content: systemString}
       ps.dialogues[filepath].historyTokens = (parseInt(ps.dialogues[filepath].historyTokens) + tokenDelta).toFixed(6)
+      return ps
     }
-    return ps
+    else {
+      throw new Error('write store error in smoothie chat')
+      return ps
+    }
   })
 
 
   // keeps it within context length
-  if(parseInt(readStore().dialogues[dialogue].historyTokens) + calcTokens(message) > contextLength[model]) trimMessages({dialogue}) 
+  if(parseInt(readStore().dialogues[filepath].historyTokens) + calcTokens(message) > contextLength[model]) trimMessages({dialogue}) 
 
   const {messagesHistory: messages, historyTokens} = readStore().dialogues[dialogue]
   messages.push({role: "user", content: message})
