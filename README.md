@@ -18,6 +18,7 @@ The only important one is
 ```bash
 smoothie
 ```
+
 or, if you're fancy,
 ```bash
 smoothie -4
