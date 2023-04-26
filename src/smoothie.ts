@@ -14,6 +14,9 @@ import os from 'os'
 import smoothieChat from './smoothieChat';
 import { checkForUpdates } from './utils/checkForUpdates';
 import chalk from 'chalk'
+import getApiKey from './openai';
+import { getUserConfirmation } from './user';
+import { execSync } from 'child_process';
 // Note: you must supply the user_id who performed the event in the `distinct_id` field
 mixpanel.track('Usage', {
   'distinct_id': os.hostname()
@@ -37,5 +40,22 @@ program
     if(true || (readEnv('LATEST_VERSION') !== version && readEnv('LATEST_VERSION'))) console.log(`A new version (${readEnv('LATEST_VERSION')}) is available! Please update by running: ${chalk.yellow(`npm install -g smoothie-cli`)}`);
     
     smoothieChat(options.four ? "gpt-4" : undefined)})
+
+
+program
+  .command('setup')
+  .description('get openai key, install vscode extenssion')
+  .action(async () => {
+    await getApiKey()
+    
+    try {
+      console.log(chalk.blue("Attempting to install the smoothie vscode extension via Node..."))
+      execSync('code --install-extension BrentTheTent.smoothie')
+      console.log(chalk.green('Smoothie vscode ext successfully installed :)'))
+    } catch(err) {
+      console.log(chalk.red('could not install smoothie vscode extension via Node. Please manually install it.'))
+    }
+
+  })
 
 program.parseAsync(process.argv)
