@@ -28,12 +28,13 @@ program
   .version(version)
   .description(description)
 
+  
 program
   .description('its smooothie time ;)')
   .option("-4, --four", 'gpt-4')
   .action(async (options) => {
     await checkForUpdates(version)
-    if(readEnv('LATEST_VERSION') !== version) console.log(`A new version (${readEnv('LATEST_VERSION')}) is available! Please update by running: ${chalk.yellow(`npm install -g smoothie-cli`)}`);
+    if(readEnv('LATEST_VERSION') !== version && readEnv('LATEST_VERSION')) console.log(`A new version (${readEnv('LATEST_VERSION')}) is available! Please update by running: ${chalk.yellow(`npm install -g smoothie-cli`)}`);
     
     smoothieChat(options.four ? "gpt-4" : undefined)})
 
