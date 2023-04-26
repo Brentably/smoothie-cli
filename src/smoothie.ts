@@ -19,10 +19,6 @@ mixpanel.track('Usage', {
   'distinct_id': os.hostname()
 })
 
-// Check for updates once a day
-
-// Show a notification if a new version is available
-
 const program = new Command()
 
 const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../package.json"), 'utf8'));
