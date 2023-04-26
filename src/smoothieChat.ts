@@ -5,15 +5,23 @@ import chalk from 'chalk'
 import { getUserInput } from './user';
 import { readEnv, readStore, trimMessages, writeStore } from './state';
 import fs from 'fs'
+import { gptStream } from './event-stream';
+import type {AxiosResponse} from 'openai/node_modules/axios/index.d.ts'
+import { CreateChatCompletionResponse } from 'openai';
+import util from 'util'
+import { printText } from './utils/printStream';
+
+export const p = (obj: any, depth:number | undefined | null = 2) => console.log(util.inspect(obj, {depth}))
+
 export default async function smoothieChat(model = "gpt-3.5-turbo") {
-  console.log('\x1b[1m%s\x1b[0m', `It's ${chalk.magenta('smoooothie')} time ;)`);
+  console.log('\x1b[1m%s\x1b[0m', `It's ${chalk.magenta('smoooothie')} time ;)\n`);
   // console.log(`Model: ${chalk.green(model)} \n`)
     while(true) {
     const value = await getUserInput(chalk.greenBright(">>> "))
     const filepath = readEnv('FOCUSED_FILEPATH')
     const resp = await getSmoothieCompletion(value, model, 0.2, filepath)
 
-    console.log("\n" + highlightCode(resp) + "\n")
+    // console.log("\n" + highlightCode(resp) + "\n")
     }
 }
 
@@ -33,7 +41,7 @@ export async function getSmoothieCompletion(message: string, model = "gpt-3.5-tu
   `
 
   const fileName = filepath.split('/')[filepath.split('/').length-1]
-  console.log(`${chalk.green(fileName)}`)
+  console.log(`${chalk.green(fileName)}\n`)
   
   writeStore(ps => {
     const prevHistory = Boolean(ps.dialogues[filepath]?.messagesHistory.length);
@@ -63,26 +71,20 @@ export async function getSmoothieCompletion(message: string, model = "gpt-3.5-tu
 
   const {messagesHistory: messages, historyTokens} = readStore().dialogues[dialogue]
   messages.push({role: "user", content: message})
+  const completion = (await gptStream(model, messages, temperature, printText)) as AxiosResponse<CreateChatCompletionResponse, any>
+  console.log(completion.data)
 
 
 
-
-  const completion = await openai.createChatCompletion({
-    model: model,
-    messages: messages,
-    temperature,
-  });
-
-  if(!completion.data.choices[0].message) throw new Error("something fucked up")
-  messages.push(completion.data.choices[0].message)
-  const {prompt_tokens, completion_tokens} = completion.data.usage!
-  const expense = calculateExpense(prompt_tokens, completion_tokens, model)
-  // the weird syntax is just necessary for rounding to 6 decimal places lol
-  writeStore((ps) => {
-    ps.dialogues[dialogue].messagesHistory = messages
-    ps.dialogues[dialogue].historyTokens = `${prompt_tokens+completion_tokens}`
-    ps.totalExpense = `${(parseFloat(parseFloat(ps.totalExpense).toFixed(6)) + expense).toFixed(6)}`
-    return ps
-  });
-  return completion.data.choices[0].message.content
+  // messages.push(completion.data.choices[0].message)
+  // const {prompt_tokens, completion_tokens} = completion.data.usage!
+  // const expense = calculateExpense(prompt_tokens, completion_tokens, model)
+  // // the weird syntax is just necessary for rounding to 6 decimal places lol
+  // writeStore((ps) => {
+  //   ps.dialogues[dialogue].messagesHistory = messages
+  //   ps.dialogues[dialogue].historyTokens = `${prompt_tokens+completion_tokens}`
+  //   ps.totalExpense = `${(parseFloat(parseFloat(ps.totalExpense).toFixed(6)) + expense).toFixed(6)}`
+  //   return ps
+  // });
+  // return completion.data.choices[0].message.content
 }
