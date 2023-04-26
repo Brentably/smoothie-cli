@@ -27,16 +27,15 @@ const { version, description } = packageJson;
 program
   .version(version)
   .description(description)
-  .action(async () => {
-    if(readEnv('LATEST_VERSION') !== version)  console.log(`A new version (${readEnv('LATEST_VERSION')}) is available! Please update by running: ${chalk.yellow(`npm install -g smoothie-cli`)}`);
-    checkForUpdates(version)
-  }
-  )
-  
+
 
 program
   .description('its smooothie time ;)')
   .option("-4, --four", 'gpt-4')
-  .action((options) => smoothieChat(options.four ? "gpt-4" : undefined))
+  .action(async (options) => {
+    await checkForUpdates(version)
+    if(readEnv('LATEST_VERSION') !== version) console.log(`A new version (${readEnv('LATEST_VERSION')}) is available! Please update by running: ${chalk.yellow(`npm install -g smoothie-cli`)}`);
+    
+    smoothieChat(options.four ? "gpt-4" : undefined)})
 
 program.parseAsync(process.argv)
