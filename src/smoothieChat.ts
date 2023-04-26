@@ -51,8 +51,7 @@ export async function getSmoothieCompletion(message: string, model = "gpt-3.5-tu
       ps.dialogues[filepath].messagesHistory[0] = {role: "system", content: systemString}
       ps.dialogues[filepath].historyTokens = (parseInt(ps.dialogues[filepath].historyTokens) + tokenDelta).toFixed(6)
       return ps
-    }
-    else {
+    } else {
       throw new Error('write store error in smoothie chat')
       return ps
     }
@@ -71,7 +70,7 @@ export async function getSmoothieCompletion(message: string, model = "gpt-3.5-tu
   const completion = await openai.createChatCompletion({
     model: model,
     messages: messages,
-    temperature
+    temperature,
   });
 
   if(!completion.data.choices[0].message) throw new Error("something fucked up")
