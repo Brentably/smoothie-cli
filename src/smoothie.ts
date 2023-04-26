@@ -28,7 +28,6 @@ program
   .version(version)
   .description(description)
 
-
 program
   .description('its smooothie time ;)')
   .option("-4, --four", 'gpt-4')
