@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { updateEnvFile } from '../state';
 
 export async function checkForUpdates(version: string) {
   try {
@@ -7,7 +8,7 @@ export async function checkForUpdates(version: string) {
     const latestVersion = response.data.version;
 
     if (version !== latestVersion) {
-      console.log(`A new version (${latestVersion}) is available! Please update by running: npm install -g ${packageName}`);
+      updateEnvFile('LATEST_VERSION', latestVersion)
     }
   } catch (error) {
     console.error('Error fetching package information from NPM registry:', error);
