@@ -17,6 +17,7 @@ import chalk from 'chalk'
 import getApiKey from './openai';
 import { getUserConfirmation } from './user';
 import { execSync } from 'child_process';
+import axios from 'axios';
 // Note: you must supply the user_id who performed the event in the `distinct_id` field
 mixpanel.track('Usage', {
   'distinct_id': os.hostname()
@@ -36,26 +37,32 @@ program
   .description('its smooothie time ;)')
   .option("-4, --four", 'gpt-4')
   .action(async (options) => {
-    await checkForUpdates(version)
-    if(true || (readEnv('LATEST_VERSION') !== version && readEnv('LATEST_VERSION'))) console.log(`A new version (${readEnv('LATEST_VERSION')}) is available! Please update by running: ${chalk.yellow(`npm install -g smoothie-cli`)}`);
-    
+
+    try {
+      const packageName = 'smoothie-cli'; // Replace with your package name
+      const response = await axios.get(`https://registry.npmjs.org/${packageName}/latest`);
+      const latestVersion = response.data.version;
+      if (version !== latestVersion) {
+        console.log(`A new version (${readEnv('LATEST_VERSION')}) is available! Please update by running: ${chalk.yellow(`npm install -g smoothie-cli`)}`);
+      }
+    } catch (error) {
+      console.error('Error fetching package information from NPM registry:', error);
+    }
+    if(readEnv('IS_SETUP') !== 'TRUE') await setup()
+
     smoothieChat(options.four ? "gpt-4" : undefined)})
 
 
-program
-  .command('setup')
-  .description('get openai key, install vscode extenssion')
-  .action(async () => {
-    await getApiKey()
-    
-    try {
-      console.log(chalk.blue("Attempting to install the smoothie vscode extension via Node..."))
-      execSync('code --install-extension BrentTheTent.smoothie')
-      console.log(chalk.green('Smoothie vscode ext successfully installed :)'))
-    } catch(err) {
-      console.log(chalk.red('could not install smoothie vscode extension via Node. Please manually install it.'))
-    }
-
-  })
+const setup = async () => {
+  await getApiKey()
+  try {
+    console.log(chalk.blue("Attempting to install the smoothie vscode extension via Node..."))
+    execSync('code --install-extension BrentTheTent.smoothie')
+    console.log(chalk.green('Smoothie vscode ext successfully installed :)'))
+    updateEnvFile('IS_SETUP', "TRUE")
+  } catch(err) {
+    console.log(chalk.red('could not install smoothie vscode extension via Node. Please manually install it.'))
+  }
+}
 
 program.parseAsync(process.argv)
