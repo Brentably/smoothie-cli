@@ -12,6 +12,7 @@ import Mixpanel from 'mixpanel'
 var mixpanel = Mixpanel.init('04ff0d092d6141a774c95ad8c2cf0d41');
 import os from 'os'
 import smoothieChat from './smoothieChat';
+import { checkForUpdates } from './utils/checkForUpdates';
 
 // Note: you must supply the user_id who performed the event in the `distinct_id` field
 mixpanel.track('Usage', {
@@ -27,11 +28,11 @@ const program = new Command()
 const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../package.json"), 'utf8'));
 const { version, description } = packageJson;
 
-
+checkForUpdates(version)
 program.version(version).description(description);
 
 program
-  .description('chat with chatGPT!')
+  .description('its smooothie time ;)')
   .option("-4, --four", 'gpt-4')
   .action((options) => smoothieChat(options.four ? "gpt-4" : undefined))
 
