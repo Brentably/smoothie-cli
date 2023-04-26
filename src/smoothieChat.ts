@@ -6,8 +6,8 @@ import { getUserInput } from './user';
 import { readEnv, readStore, trimMessages, writeStore } from './state';
 import fs from 'fs'
 export default async function smoothieChat(model = "gpt-3.5-turbo") {
-  console.log('\x1b[1m%s\x1b[0m', `Chat GPT CLI.`);
-  console.log(` Model: ${chalk.green(model)} \n`)
+  console.log('\x1b[1m%s\x1b[0m', `It's ${chalk.magenta('smoooothie')} time ;)`);
+  // console.log(`Model: ${chalk.green(model)} \n`)
     while(true) {
     const value = await getUserInput(chalk.greenBright(">>> "))
     const filepath = readEnv('FOCUSED_FILEPATH')

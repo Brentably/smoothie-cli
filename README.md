@@ -1,4 +1,4 @@
-# wtfdid-cli
+# Smoothie CLI
 
 A CLI for GPT-3.5 / GPT-4 with a focus on simplicity and ease of use.
 
@@ -7,13 +7,24 @@ A CLI for GPT-3.5 / GPT-4 with a focus on simplicity and ease of use.
 Install the CLI globally using npm: 
 
 ```bash
-npm i -g wtfdid-cli
+npm i -g smoothie-cli
 ```
 
 ## Usage
 
 The CLI provides several commands for different purposes:
 
+The only important one is
+```bash
+smoothie
+```
+or, if you're fancy,
+```bash
+smoothie -4
+``` 
+which runs GPT-4.
+
+That being said: Here are legacy docs. These commands should still work...
 ### Chat with GPT
 
 Start a conversation with GPT:

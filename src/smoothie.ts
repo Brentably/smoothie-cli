@@ -24,8 +24,7 @@ const program = new Command()
 const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../package.json"), 'utf8'));
 const { version, description } = packageJson;
 
-checkForUpdates(version)
-program.version(version).description(description);
+program.version(version).description(description).action(async () => checkForUpdates(version))
 
 program
   .description('its smooothie time ;)')
