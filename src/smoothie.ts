@@ -32,6 +32,7 @@ program
     checkForUpdates(version)
   }
   )
+  
 
 program
   .description('its smooothie time ;)')
