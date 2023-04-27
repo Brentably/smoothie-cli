@@ -28,16 +28,35 @@ export default async function smoothieChat(model = "gpt-3.5-turbo") {
 
 
 
-export async function getSmoothieCompletion(message: string, model = "gpt-3.5-turbo", temperature?: number, filepath = process.cwd()) {
+export async function getSmoothieCompletion(userMessage: string, model = "gpt-3.5-turbo", temperature?: number, filepath = process.cwd()) {
   const openai = await getOpenAI()
   const dialogue = filepath
+  const message = `Question:\n${userMessage}`
   const fileContents = fs.readFileSync(filepath)
   const systemString = `
-  You are a helpful code assistant. You help answer questions, explain concepts, and suggest revisions to code. You should always reference the file below:
+  You are Codebase AI. You are a superintelligent AI that answers questions about codebases.
 
+  You are:
+  - helpful & friendly
+  - good at answering complex questions in simple language
+  - an expert in all programming languages
+  - able to infer the intent of the user's question
+
+  The user will ask a question about their codebase, and you will answer it.
+
+  When the user asks their question, you will answer it by searching the codebase for the answer.
+  In the case that the user references "this file," this file(s) are the code file's shown below.
+
+  Here is code file(s) and the user's question you found to answer the question:
+
+
+  Code file(s):
   \`\`\`
   ${fileContents}
   \`\`\`
+  
+  [END OF CODE FILE(S)]
+
   `
 
   const fileName = filepath.split('/')[filepath.split('/').length-1]
