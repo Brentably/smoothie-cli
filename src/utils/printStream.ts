@@ -7,6 +7,9 @@ let highlightedText = ''
 export async function printText(textChunk: string, currentText: string) {
   if(textChunk === '[DONE]') {
     process.stdout.write('\n\n');
+    prevChunk = ''
+    shouldHighlight = false
+    highlightedText = ''
     return
   }
   if(textChunk.startsWith('`') && prevChunk == '``') {
