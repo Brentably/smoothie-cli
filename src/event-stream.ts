@@ -11,7 +11,7 @@ export async function gptStream(
   model: string,
   messages:ChatCompletionRequestMessage[], 
   temperature: number = 0.2, 
-  streamCallback: ((currentResponse: string, fullResponse: string) => Promise<void>) | ((currentResponse: string, fullResponse: string) => void)) {
+  streamCallback: ((currentResponse: string, fullResponse: string, shouldHighlight?: boolean, highlightedText?: string) => Promise<void>) | ((currentResponse: string, fullResponse: string, shouldHighlight?: boolean, highlightedText?: string) => void)) {
   return new Promise(async (resolve, reject) => {
     const openai = await getOpenAI()
     const completion:any = await openai.createChatCompletion(
@@ -26,9 +26,11 @@ export async function gptStream(
     )
 
     let runningText = '';
+
     completion.data.pipe(
       new Writable({
         async write(chunk: Buffer, encoding, callback) {
+
 
           const eventsWithPrefix:string[] = chunk.toString().split('\n').filter(el => el.length);
 
@@ -49,13 +51,11 @@ export async function gptStream(
                 console.log(chalk.red('err converting string to JSON:\n'), string)
               }
 
-              const text = data.choices?.[0].delta.content;
-              if (text) {
-                runningText += text;
-                // print(runningText);
-                //TODO: Await this?
+              const textChunk = data.choices?.[0].delta.content;
+              if (textChunk) {
+                runningText += textChunk;
 
-                await streamCallback(text, runningText);
+                await streamCallback(textChunk, runningText);
               }
               
             }

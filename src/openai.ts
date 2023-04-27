@@ -1,7 +1,8 @@
 import { ChatCompletionRequestMessage, Configuration, OpenAIApi, ChatCompletionRequestMessageRoleEnum } from "openai";
 import {readApiKey, readStore, trimMessages, writeApiKey, writeStore} from "./state"
 import inquirer from "inquirer";
-
+import assert from "node:assert";
+import { get_encoding, encoding_for_model } from "@dqbd/tiktoken";
 
 export const PRICING_RATE:{[key:string]:any} = {
   "gpt-3.5-turbo": {"prompt": 0.002, "completion": 0.002},
@@ -121,4 +122,9 @@ export async function testKey(key: string):Promise<boolean> {
 }
 
 
-export const calcTokens = (string: string): number => Math.round(string.length / 4)
+// export const calcTokens = (string: string): number => Math.round(string.length / 4)
+export const calcTokens = (string: string): number => {
+  const enc = encoding_for_model("gpt-4");
+  const tokens = enc.encode(string)
+  return tokens.length
+}

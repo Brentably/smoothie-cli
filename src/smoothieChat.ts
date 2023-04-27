@@ -71,20 +71,19 @@ export async function getSmoothieCompletion(message: string, model = "gpt-3.5-tu
 
   const {messagesHistory: messages, historyTokens} = readStore().dialogues[dialogue]
   messages.push({role: "user", content: message})
-  const completion = (await gptStream(model, messages, temperature, printText)) as AxiosResponse<CreateChatCompletionResponse, any>
-  console.log(completion.data)
+  const assistantMessage = await gptStream(model, messages, temperature, printText) as string
 
 
 
-  // messages.push(completion.data.choices[0].message)
+  messages.push({role: "assistant", content: assistantMessage})
   // const {prompt_tokens, completion_tokens} = completion.data.usage!
   // const expense = calculateExpense(prompt_tokens, completion_tokens, model)
   // // the weird syntax is just necessary for rounding to 6 decimal places lol
-  // writeStore((ps) => {
-  //   ps.dialogues[dialogue].messagesHistory = messages
-  //   ps.dialogues[dialogue].historyTokens = `${prompt_tokens+completion_tokens}`
-  //   ps.totalExpense = `${(parseFloat(parseFloat(ps.totalExpense).toFixed(6)) + expense).toFixed(6)}`
-  //   return ps
-  // });
+  writeStore((ps) => {
+    ps.dialogues[dialogue].messagesHistory = messages
+    ps.dialogues[dialogue].historyTokens = (parseInt(ps.dialogues[dialogue].historyTokens) + calcTokens(assistantMessage)).toString()
+    // ps.totalExpense = `${(parseFloat(parseFloat(ps.totalExpense).toFixed(6)) + expense).toFixed(6)}`
+    return ps
+  });
   // return completion.data.choices[0].message.content
 }

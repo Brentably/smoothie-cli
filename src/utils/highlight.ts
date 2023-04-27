@@ -22,7 +22,7 @@ const theme: { [key: string]: chalk.Chalk } = {
   number: chalk.magenta,
 }
 
-const highlight = (code: string, language: string = 'general') => {
+export const highlight = (code: string, language: string = 'general') => {
   const tokens = Prism.tokenize(code, Prism.languages[language])
   return tokens
     .map((token) => {
