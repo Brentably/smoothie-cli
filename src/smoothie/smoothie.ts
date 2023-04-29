@@ -1,21 +1,21 @@
 #!/usr/bin/env node
 import { Command } from 'commander'
-import writeFileWithPrompt from './writeFromPrompt'
+import writeFileWithPrompt from '../writeFromPrompt'
 import inquirer from 'inquirer'
-import { clearChat, readEnv, updateEnvFile } from './state';
-import chat from './chat';
-import ask from './ask';
+import { clearChat, readEnv, updateEnvFile } from '../state';
+import chat from '../chat';
+import ask from '../ask';
 import fs from 'fs';
 import path from 'path'
-import experimentalChat from './agent/experimentalChat';
+import experimentalChat from '../agent/experimentalChat';
 import Mixpanel from 'mixpanel'
 var mixpanel = Mixpanel.init('04ff0d092d6141a774c95ad8c2cf0d41');
 import os from 'os'
 import smoothieChat from './smoothieChat';
-import { checkForUpdates } from './utils/checkForUpdates';
+import { checkForUpdates } from '../utils/checkForUpdates';
 import chalk from 'chalk'
-import getApiKey from './openai';
-import { getUserConfirmation } from './user';
+import getApiKey from '../openai';
+import { getUserConfirmation } from '../user';
 import { execSync } from 'child_process';
 import axios from 'axios';
 // Note: you must supply the user_id who performed the event in the `distinct_id` field
@@ -25,7 +25,7 @@ mixpanel.track('Usage', {
 
 const program = new Command()
 
-const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../package.json"), 'utf8'));
+const packageJson = JSON.parse(fs.readFileSync(path.resolve(__dirname, "../../package.json"), 'utf8'));
 const { version, description } = packageJson;
 
 program

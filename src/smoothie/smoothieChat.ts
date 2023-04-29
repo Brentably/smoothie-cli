@@ -1,15 +1,15 @@
 import readline from 'readline'
-import { calcTokens, calculateExpense, contextLength, getChatCompletion, getOpenAI } from './openai';
-import { highlightCode } from './utils/highlight';
+import { calcTokens, calculateExpense, contextLength, getChatCompletion, getOpenAI } from '../openai';
+import { highlightCode } from '../utils/highlight';
 import chalk from 'chalk'
-import { getUserInput } from './user';
-import { readEnv, readStore, trimMessages, writeStore } from './state';
+import { getUserInput } from '../user';
+import { readEnv, readStore, trimMessages, writeStore } from '../state';
 import fs from 'fs'
-import { gptStream } from './event-stream';
+import { gptStream } from '../event-stream';
 import type {AxiosResponse} from 'openai/node_modules/axios/index.d.ts'
 import { CreateChatCompletionResponse } from 'openai';
 import util from 'util'
-import { printText } from './utils/printStream';
+import { printText } from '../utils/printStream';
 
 export const p = (obj: any, depth:number | undefined | null = 2) => console.log(util.inspect(obj, {depth}))
 

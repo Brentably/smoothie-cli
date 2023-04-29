@@ -3,7 +3,7 @@ import {Writable} from 'stream'
 import { getOpenAI } from './openai';
 import { ChatCompletionRequestMessage, CreateChatCompletionResponse } from 'openai';
 import type {AxiosResponse} from 'openai/node_modules/axios/index.d.ts'
-import { p } from './smoothieChat';
+import { p } from './smoothie/smoothieChat';
 import chalk from 'chalk'
 
 
