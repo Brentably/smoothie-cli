@@ -17,7 +17,7 @@ export async function getUserInput(prefix: string): Promise<string> {
   return answer;
 }
 
-export async function getUserConfirmation(actionToConfirm: string) {
+export async function getUserConfirmation(actionToConfirm: string):Promise<boolean> {
   const questions = [
     {
       type: 'confirm',

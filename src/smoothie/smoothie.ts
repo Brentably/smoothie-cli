@@ -18,7 +18,6 @@ import getApiKey from '../openai';
 import { getUserConfirmation } from '../user';
 import { execSync } from 'child_process';
 import axios from 'axios';
-import {io} from 'socket.io-client'
 
 
 // Note: you must supply the user_id who performed the event in the `distinct_id` field
@@ -58,6 +57,11 @@ program
 
 const setup = async () => {
   await getApiKey()
+  const doesApprove = await getUserConfirmation('Install the smoothie vscode extension? (required to work)')
+  if(!doesApprove) {
+    console.log(":( Smoothie CLI won't work properly without the vscode extension, but you can install it at any time. It's called 'smoothie' by BrentTheTent")
+    return
+  }
   try {
     console.log(chalk.blue("Attempting to install the smoothie vscode extension via Node..."))
     execSync('code --install-extension BrentTheTent.smoothie')
@@ -68,26 +72,6 @@ const setup = async () => {
   }
 }
 
-const getSelectedRange = async () => {
-  return new Promise((res, rej) => {
-    const socket = io("ws://localhost:6969")
-    socket.on('selectedRange', (arg) => res(arg))
-    socket.emit("getSelectedRange")
-  })
-}
-
-program
-  .command('frantic')
-  .description('ff')
-  .action(async () => {
-    let selectedRange = await getSelectedRange()
-    console.log(selectedRange)
-    // async function delay(ms: number) {
-    //   return new Promise(resolve => setTimeout(resolve, ms));
-    // }
-    // await delay(3000)
-
-  })
 
 
 

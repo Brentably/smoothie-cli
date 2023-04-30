@@ -20,13 +20,15 @@ export function calculateExpense(prompt_tokens: number, completion_tokens: numbe
   return parseFloat(((prompt_tokens / 1000) * prompt_pricing) + ((completion_tokens / 1000) * completion_pricing).toFixed(6))
 }
 //helper
+let openAi:OpenAIApi | null = null
 export async function getOpenAI() {
+  if(openAi) return openAi
   await getApiKey()
   const configuration = new Configuration({
       apiKey: readApiKey(),
   });
-
-  return new OpenAIApi(configuration);
+  openAi = new OpenAIApi(configuration);
+  return openAi
 }
 
 // calls openai, stores the message history in store.json
