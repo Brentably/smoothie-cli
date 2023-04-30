@@ -18,10 +18,14 @@ import getApiKey from '../openai';
 import { getUserConfirmation } from '../user';
 import { execSync } from 'child_process';
 import axios from 'axios';
+import {io} from 'socket.io-client'
+
+
 // Note: you must supply the user_id who performed the event in the `distinct_id` field
 mixpanel.track('Usage', {
   'distinct_id': os.hostname()
 })
+
 
 const program = new Command()
 
@@ -37,7 +41,6 @@ program
   .description('its smooothie time ;)')
   .option("-4, --four", 'gpt-4')
   .action(async (options) => {
-
     try {
       const packageName = 'smoothie-cli'; // Replace with your package name
       const response = await axios.get(`https://registry.npmjs.org/${packageName}/latest`);
@@ -64,5 +67,28 @@ const setup = async () => {
     console.log(chalk.red('could not install smoothie vscode extension via Node. Please manually install it.'))
   }
 }
+
+const getSelectedRange = async () => {
+  return new Promise((res, rej) => {
+    const socket = io("ws://localhost:6969")
+    socket.on('selectedRange', (arg) => res(arg))
+    socket.emit("getSelectedRange")
+  })
+}
+
+program
+  .command('frantic')
+  .description('ff')
+  .action(async () => {
+    let selectedRange = await getSelectedRange()
+    console.log(selectedRange)
+    // async function delay(ms: number) {
+    //   return new Promise(resolve => setTimeout(resolve, ms));
+    // }
+    // await delay(3000)
+
+  })
+
+
 
 program.parseAsync(process.argv)
