@@ -22,13 +22,16 @@ export const p = (obj: any, depth:number | undefined | null = 2) => console.log(
 
 export const getSelectedRangeAndText = async ():Promise<[vscode.Selection | undefined, string | undefined]> => {
   return new Promise((res, rej) => {
+    console.log('gsrat invokd')
     const socket = io("ws://localhost:6969")
-    socket.on('selectedRangeAndText', (arg) => res(arg))
+    socket.on('selectedRangeAndText', (arg:[vscode.Selection | undefined, string | undefined]) => res(arg))
     socket.emit("getSelectedRangeAndText")
   })
 }
 
+
 export const getFocusedFile = async ():Promise<string | undefined>  => {
+  console.log('gff invokd')
   return new Promise((res, rej) => {
     const socket = io("ws://localhost:6969")
     socket.on('focusedFile', (arg: string | undefined) => res(arg))
@@ -47,7 +50,7 @@ export default async function smoothieChat(model = "gpt-3.5-turbo") {
       console.log(chalk.yellow('warning:'), ' could not find filepath. Please CMD + P and Reload window, and if that doesnt work contact @BingBongBrent on Twitter')
       return
     }
-    if((selectedRange && !selectedText) || (selectedText && !selectedRange)) throw new Error('range w/o text or vice versa')
+    if(JSON.stringify(selectedRange?.start) !== JSON.stringify(selectedRange?.end) && (selectedRange && !selectedText) || (selectedText && !selectedRange)) throw new Error('range w/o text or vice versa')
 
     if(selectedRange && selectedText) {
       console.log('...processing highlighted / selected text...')

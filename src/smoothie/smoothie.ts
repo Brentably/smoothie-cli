@@ -50,9 +50,13 @@ program
     } catch (error) {
       console.error('Error fetching package information from NPM registry:', error);
     }
-    if(readEnv('IS_SETUP') !== 'TRUE') await setup()
+    if(readEnv('IS_SETUP') !== 'TRUE') {
+      await setup()
+      return
+    }
 
-    smoothieChat(options.four ? "gpt-4" : undefined)})
+    smoothieChat(options.four ? "gpt-4" : undefined)
+  })
 
 
 const setup = async () => {
@@ -65,7 +69,7 @@ const setup = async () => {
   try {
     console.log(chalk.blue("Attempting to install the smoothie vscode extension via Node..."))
     execSync('code --install-extension BrentTheTent.smoothie')
-    console.log(chalk.green('Smoothie vscode ext successfully installed :)'))
+    console.log(`${chalk.green('Smoothie vscode ext successfully installed :)')} ${chalk.red(' Please Reload Window')} to activate it.`)
     updateEnvFile('IS_SETUP', "TRUE")
   } catch(err) {
     console.log(chalk.red('could not install smoothie vscode extension via Node. Please manually install it.'))

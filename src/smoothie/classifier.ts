@@ -1,4 +1,5 @@
 import { calcTokens, getOpenAI } from "../openai";
+import chalk from 'chalk'
 
 const systemPrompt = 
 `You are Classifier AI. Your sole purpose is to classify things into \`rewrite\` OR \`readonly\`.
@@ -39,7 +40,10 @@ export async function shouldRewrite(userQuery: string):Promise<boolean> {
 
   const resp = completion.data.choices[0].message?.content
   if(!resp) throw new Error("no response")
-  if(resp.toLowerCase() !== 'rewrite' || resp.toLowerCase() !== 'readonly') throw new Error('classifier returned something other than `rewrite` or `readonly`')
+  console.log(chalk.blue(resp))
+  if(resp.toLowerCase().trim() !== 'rewrite' || resp.toLowerCase().trim() !== 'readonly') {
+    throw new Error(`classifier returned something other than \`rewrite\` or \`readonly\`:\n${resp}`)
+  }
 
-  return (resp.toLowerCase() == 'rewrite')
+  return (resp.toLowerCase().trim() == 'rewrite')
 }
