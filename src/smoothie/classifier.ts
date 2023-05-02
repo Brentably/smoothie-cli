@@ -41,7 +41,7 @@ export async function shouldRewrite(userQuery: string):Promise<boolean> {
   const resp = completion.data.choices[0].message?.content
   if(!resp) throw new Error("no response")
   console.log(chalk.blue(resp))
-  if(resp.toLowerCase().trim() !== 'rewrite' || resp.toLowerCase().trim() !== 'readonly') {
+  if(resp.toLowerCase().trim() !== 'rewrite' && resp.toLowerCase().trim() !== 'readonly') {
     throw new Error(`classifier returned something other than \`rewrite\` or \`readonly\`:\n${resp}`)
   }
 

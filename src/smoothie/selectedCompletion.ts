@@ -11,22 +11,79 @@ import { CreateChatCompletionResponse } from 'openai';
 import util from 'util'
 import { printText } from '../utils/printStream';
 import {io} from 'socket.io-client'
-import vscode from 'vscode'
+import type vscode from 'vscode'
+import { replaceSelection } from './stupid-socket';
 
-export async function getSelectedCompletionRewrite(userMessage: string, model = "gpt-3.5-turbo",filepath: string, selectedRange: vscode.Selection, selectedText: string, temperature?: number) {
+// async function replaceCodeInRange(filePath: string, range: vscode.Range, newCode: string) {
+//   // Read the contents of the file
+//   const fileContents = await fs.promises.readFile(filePath, 'utf-8');
+
+//   // Get the start and end positions of the range
+//   const startPosition = range.start;
+//   const endPosition = range.end;
+
+//   // Function to manually calculate the character offset
+//   function calculateOffset(position: vscode.Position, text: string) {
+//     const lines = text.split('\n');
+//     let offset = 0;
+
+//     for (let i = 0; i < position.line; i++) {
+//       offset += lines[i].length + 1; // Add 1 for the newline character
+//     }
+
+//     offset += position.character;
+//     return offset;
+//   }
+
+//   // Convert the positions to character offsets
+//   const startOffset = calculateOffset(startPosition, fileContents);
+//   const endOffset = calculateOffset(endPosition, fileContents);
+
+//   // Replace the code in the range with the new code
+//   const newFileContents = fileContents.slice(0, startOffset) + newCode + fileContents.slice(endOffset);
+
+//   // Write the new contents back to the file
+//   await fs.promises.writeFile(filePath, newFileContents);
+// }
+
+
+const systemPromptCodeGen = `You are CodeGenerator AI. Your sole purpose is to generate code. Mostly rewriting code, adding stuff, and fixing stuff. 
+You will be given a user query and a code sample. Your job is to rewrite the code sample as accurately as possible. Response with just the new code sample, and nothing else.
+
+Do not remove comments unless they explicitly ask you to.
+
+You will respond with the new and improved code and that code only.`
+
+const userPromptCodeGen = (userMessage: string, codeSnippet: string) => `User Query: ${userMessage}\n\n Code: \`\`\`\n${codeSnippet}\n\`\`\``
+
+export async function getSelectedCompletionRewrite(userMessage: string, model = "gpt-3.5-turbo",filepath: string, selectedRange: vscode.Selection, selectedText: string, temperature = 0.2) {
   const openai = await getOpenAI()
   const {start: {line: startLine, character: startCol}, end: {line: endLine, character: endCol} } = selectedRange
-  
 
-  // obtain rewrite
+  const resp = await openai.createChatCompletion({
+    model,
+    messages: [
+      {role: 'system', content: systemPromptCodeGen},
+     {role: "user", content: userPromptCodeGen(userMessage, selectedText)}
+    ],
+    temperature
+  })
 
-  // rewrite rewrite
+  const asstRespCode = resp.data.choices[0].message?.content
+  if(asstRespCode === undefined) throw new Error('resp from openai undefined')
+  const codeMatches = asstRespCode.match(/```([\s\S]*?)```/g)
+  const code = codeMatches ? codeMatches[0].slice(3, -3) : asstRespCode
 
+  console.log('replacing highlighted text with:\n', highlightCode(code))
+  // rewrite rewrit
 
+  await replaceSelection(code)
+  console.log('code replaced!')
+
+  // await saveFile(selectedRange)
   // validate rewrite?
 
 }
-
 
 export async function getSelectedCompletionReadonly(userMessage: string, model = "gpt-3.5-turbo",filepath: string, selectedText: string, temperature?: number) {
   const openai = await getOpenAI()

@@ -10,34 +10,16 @@ import type {AxiosResponse} from 'openai/node_modules/axios/index.d.ts'
 import { CreateChatCompletionResponse } from 'openai';
 import util from 'util'
 import { printText } from '../utils/printStream';
-import {io} from 'socket.io-client'
+
 import vscode from 'vscode'
 import { getSmoothieFileCompletion } from './smoothieFileCompletion';
 import { shouldRewrite } from './classifier';
 import { getSelectedCompletionReadonly, getSelectedCompletionRewrite } from './selectedCompletion';
+import { getFocusedFile, getSelectedRangeAndText } from './stupid-socket';
 
 
 export const p = (obj: any, depth:number | undefined | null = 2) => console.log(util.inspect(obj, {depth}))
 
-
-export const getSelectedRangeAndText = async ():Promise<[vscode.Selection | undefined, string | undefined]> => {
-  return new Promise((res, rej) => {
-    console.log('gsrat invokd')
-    const socket = io("ws://localhost:6969")
-    socket.on('selectedRangeAndText', (arg:[vscode.Selection | undefined, string | undefined]) => res(arg))
-    socket.emit("getSelectedRangeAndText")
-  })
-}
-
-
-export const getFocusedFile = async ():Promise<string | undefined>  => {
-  console.log('gff invokd')
-  return new Promise((res, rej) => {
-    const socket = io("ws://localhost:6969")
-    socket.on('focusedFile', (arg: string | undefined) => res(arg))
-    socket.emit("getFocusedFile")
-  })
-}
 
 
 export default async function smoothieChat(model = "gpt-3.5-turbo") {

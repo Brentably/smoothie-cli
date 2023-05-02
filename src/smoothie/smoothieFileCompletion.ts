@@ -13,6 +13,9 @@ import { printText } from '../utils/printStream';
 import {io} from 'socket.io-client'
 import vscode from 'vscode'
 
+
+
+
 export async function getSmoothieFileCompletion(userMessage: string, model = "gpt-3.5-turbo",filepath: string, temperature?: number) {
   const openai = await getOpenAI()
   const dialogue = filepath
